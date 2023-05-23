@@ -98,6 +98,10 @@
                 "support"
             ]
         },
+        "composer-exit-on-patch-failure": true,
+        "patchLevel": {
+            "drupal/core": "-p2"
+        },
         "enable-patching": true
     },
     "config": {
