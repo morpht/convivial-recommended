@@ -1,7 +1,7 @@
 # Morpht Convivial Recommended Project
 
-This is a project template providing a great out-of-the-box experience for new Drupal 9 projects that encapsulates our starting site configuration and basic scaffolding
-like settings.php. It is based on the [Drupal Recommended Project](https://github.com/drupal/recommended-project/tree/9.0.x), with the principal difference being the
+This is a project template providing a great out-of-the-box experience for new Drupal 10 projects that encapsulates our starting site configuration and basic scaffolding
+like settings.php. It is based on the [Drupal Recommended Project](https://github.com/drupal/recommended-project/tree/10.0.x), with the principal difference being the
 addition of several modules and packages that provide the best possible out-of-the-box personalization experience.
 
 This project includes the following packages and configuration:
@@ -31,7 +31,7 @@ Once you create the project, you can and should customize `composer.json` and th
 
 ## Installation on Pantheon
 
-* Create Drupal 9 site from link here https://pantheon.io/docs/drupal-9.
+* Create Drupal 10 site from link here https://docs.pantheon.io/drupal-10.
 * Edit drush/sites/pantheon/{project}.site.yml to add there Pantheon site hash instead of %hash%
 * Edit repository secrets at github to add there Pantheon git url.
 * Upload database from local to pantheon.
