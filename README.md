@@ -22,7 +22,7 @@ composer create-project --no-interaction --stability dev morpht/convivial-recomm
 Once you create the project, you can and should customize `composer.json` and the rest of the project to suit your needs. You will receive updates from any dependent packages, but not from the project template itself. It's yours to keep!
 
 * Initialize the git in the *newproject* folder
-* You should only commit changes to `composer.json` and `composer.lock`. Do not commit files in the `vendor`, `docroot/core`, and similar directories (these are ignored by the provided `.gitignore` file).
+* You should only commit changes to `composer.json` and `composer.lock`. Do not commit files in the `vendor`, `web/core`, and similar directories (these are ignored by the provided `.gitignore` file).
 
 ## Local development
 
@@ -40,6 +40,5 @@ Once you create the project, you can and should customize `composer.json` and th
 
 ## References
 
-* [Detailed guide to using Default content](https://www.drupal.org/docs/8/modules/default-content-for-d8/overview)
 * [How to write an installation profile](https://www.drupal.org/docs/distributions/creating-distributions/how-to-write-a-drupal-installation-profile)
 * [Acquia Drupal recommended project](https://github.com/acquia/drupal-recommended-project)
