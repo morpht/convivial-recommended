@@ -8,17 +8,14 @@ jobs:
   build:
     name: Build Convivial Recommended
     strategy:
-      fail-fast: false
       matrix:
         os: [ubuntu-latest, macOS-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout.
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: '0'
-      - name: Validate composer.json
-        run: composer validate
       - name: Setup PHP and tools
         uses: shivammathur/setup-php@v2
         with:
@@ -27,3 +24,7 @@ jobs:
           extensions: mbstring, gd, intl, yaml, bcmath, curl
       - name: Execute Composer install
         run: composer install
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+      - name: Execute Morpht Convivial Recommended create project
+        run: composer create-project --no-interaction --stability dev morpht/convivial-recommended myproject
