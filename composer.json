@@ -32,7 +32,8 @@
         "drupal/core-recommended": "^10",
         "drush/drush": "^11",
         "morpht/convivial": "dev-main",
-        "oomphinc/composer-installers-extender": "^2"
+        "oomphinc/composer-installers-extender": "^2",
+        "pantheon-systems/quicksilver-pushback": "^2"
     },
     "conflict": {
         "drupal/drupal": "*"
