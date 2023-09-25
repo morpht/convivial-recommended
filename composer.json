@@ -34,7 +34,9 @@
         "morpht/convivial": "dev-main",
         "morpht/mdt": "^1.0",
         "oomphinc/composer-installers-extender": "^2",
-        "pantheon-systems/quicksilver-pushback": "^2"
+        "pantheon-systems/quicksilver-pushback": "^2",
+        "grasmash/drupal-security-warning": "dev-master",
+        "pantheon-systems/drupal-integrations": "^10"
     },
     "conflict": {
         "drupal/drupal": "*"
