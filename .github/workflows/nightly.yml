@@ -8,10 +8,7 @@ on:
 jobs:
   build:
     name: Build Convivial Recommended
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macOS-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout.
         uses: actions/checkout@v3
