@@ -1,9 +1,9 @@
 # Morpht Convivial Recommended Project
 
-[![Continous Integration](https://github.com/morpht/convivial-recommended/actions/workflows/nightly.yml/badge.svg)](https://github.com/morpht/convivial-recommended/actions?query=branch%3Amain)
+[![Continous Integration](https://github.com/morpht/convivial-recommended/actions/workflows/build.yml/badge.svg)](https://github.com/morpht/convivial-recommended/actions?query=branch%3Amain)
 
 This is a project template providing a great out-of-the-box experience for new Drupal 10 projects that encapsulates our starting site configuration and basic scaffolding
-like settings.php. It is based on the [Drupal Recommended Project](https://github.com/drupal/recommended-project/tree/10.0.x), with the principal difference being the
+like settings.php. It is based on the [Drupal Recommended Project](https://github.com/drupal/recommended-project/tree/10.2.x), with the principal difference being the
 addition of several modules and packages that provide the best possible out-of-the-box personalization experience.
 
 This project includes the following packages and configuration:
