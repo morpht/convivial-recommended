@@ -8,6 +8,7 @@ on:
   push:
     branches:
       - main
+      - convivial-recommended-[0-9]+
   pull_request:
     types:
       - opened
@@ -20,15 +21,14 @@ jobs:
     if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'push' || !github.event.pull_request.draft }}
     name: Build Convivial Recommended
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/morpht/ci-php:8.2.14-memory
+      env:
+        PHP_MEMORY_LIMIT: 512M
+
     steps:
       - name: Checkout.
         uses: actions/checkout@v3
-      - name: Setup PHP and tools
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.1'
-          tools: composer:v2
-          extensions: mbstring, gd, intl, yaml, bcmath, curl
       - name: Execute Composer install
         run: composer install
       - name: Validate composer.json and composer.lock
