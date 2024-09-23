@@ -2,8 +2,8 @@ name: Build, Validate and Test
 
 on:
   schedule:
-    # Weekday (22=10pm UTC). Evaluates to 8am AEST.
-    - cron: '0 22 * * *'
+    # Weekdays at 22:00 UTC (Monday to Friday 8 am AEST).
+    - cron: '0 22 * * 1-5'
   workflow_dispatch:
   push:
     branches:
@@ -21,10 +21,11 @@ jobs:
     if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'push' || !github.event.pull_request.draft }}
     name: Full (Build, Validate, and Test)
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/morpht/ci-php:8.2.14-memory
-      env:
-        PHP_MEMORY_LIMIT: 512M
+
+
+    strategy:
+      matrix:
+        php: ['8.3']
 
     services:
       database:
@@ -32,7 +33,7 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: root
         ports:
-          - 32574:3306
+          - 3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     env:
@@ -53,6 +54,32 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           # the commit ID for the last commit to the head branch of the pull request
           # (the default is the last *merge* commit of the pull request merge branch)
+
+      - name: Setup PHP and tools
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:2.7.7
+          # See https://www.drupal.org/docs/getting-started/system-requirements/php-requirements#extensions
+          extensions: curl, date, dom, filter, gd, hash, json, mbstring, mysql, pcre, pdo, pdo_mysql, session, SimpleXML, SPL, tokenizer, xml, xmlwriter
+          # See https://docs.pantheon.io/guides/account-mgmt/plans/resources#current-plan-resources
+          ini-values: memory_limit=256M, max_execution_time=120
+          coverage: none
+
+      - name: Install php-spx extension
+        run: |
+          cd /tmp
+          git clone https://github.com/NoiseByNorthwest/php-spx.git
+          cd php-spx
+          git checkout release/latest
+          phpize
+          ./configure
+          make
+          mkdir -p $HOME/php-exts
+          make INSTALL_ROOT=$HOME/php-exts install
+          EXTENSION_DIR=$(find $HOME/php-exts -name 'spx.so' | sed 's|/spx.so||')
+          echo "extension=${EXTENSION_DIR}/spx.so" >> "$(php -r 'echo php_ini_loaded_file();')"
+        shell: bash
 
       - name: Prepare environment variables
         run: |
@@ -93,17 +120,30 @@ jobs:
           composer validate
           composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
+      - name: Setup environment variables
+        run: |
+          echo "$GITHUB_WORKSPACE/vendor/bin" >> $GITHUB_PATH
+          echo "$GITHUB_WORKSPACE/bin" >> $GITHUB_PATH
+
       - name: Validate composer
         run: composer validate --no-check-all --ansi
 
       - name: Show environment variables
         run: ls -alk ./bin
 
-      - name: Prepare environment for application
-        run: bash $SCRIPT_DIR/setup_app.sh
+      - name: Setup MySQL
+        run: |
+          sudo service mysql start
+          mysql -uroot -proot < $(echo ${SCRIPT_DIR})/install.sql
 
       - name: Setup application
         run: ./bin/drush si convivial --locale=en --db-url=mysql://drupal:drupal@database:3306/drupal --account-name=admin --account-pass=admin --site-name=Convivial Demo --site-pass=admin
 
-      - name: Check drupal application Status
-        run: ./bin/drush status
+      - name: Setup Application
+        run: |
+          SPX_ENABLED=1 drush si convivial --locale=en --db-url=mysql://drupal:drupal@127.0.0.1:${{ job.services.mysql.ports[3306] }}/drupal --account-name=superadmin --account-pass=superadmin --site-name='Convivial Demo' --yes
+          drush ucrt admin --password=admin --mail=admin+ci+convivial-recommended@example.com --yes
+          drush urol site_administrator admin --yes
+
+      - name: Check Application Status
+        run: drush status
